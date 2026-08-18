@@ -23,7 +23,8 @@ CREATE TABLE Customers
 (
     CustomerID INT PRIMARY KEY,
     CustomerName VARCHAR(100),
-    City VARCHAR(100)
+    City VARCHAR(100),
+    State VARCHAR(100)
 );
 GO
 
@@ -35,7 +36,7 @@ GO
 CREATE TABLE Products
 (
     ProductID INT PRIMARY KEY,
-    [Products Name] VARCHAR(100),
+    ProductName VARCHAR(100),
     Category VARCHAR(100),
     Price DECIMAL(10,2)
 );
@@ -82,16 +83,18 @@ GO
 
 
 -- =====================================================
--- Database Structure
--- Customers
---      ↓
--- Orders
---      ↓
--- OrderDetails
---      ↓
--- Products
+-- Database Relationships
 -- =====================================================
 
--- NOTE:
--- Sample INSERT data will be added separately after
--- verifying the exact data from the original database.
+-- Customers
+--     ↓
+-- Orders
+--     ↓
+-- OrderDetails
+--     ↓
+-- Products
+
+
+-- =====================================================
+-- END OF DATABASE SETUP
+-- =====================================================
