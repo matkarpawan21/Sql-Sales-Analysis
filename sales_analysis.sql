@@ -1,9 +1,14 @@
--- SQL Sales Analysis Project
+-- =====================================================
+-- SQL SALES ANALYSIS PROJECT
 -- Business Analysis Queries
 -- SQL Server / SSMS
+-- =====================================================
 
 
--- 1. Total Sales
+-- =====================================================
+-- 1. TOTAL SALES
+-- =====================================================
+
 SELECT
     SUM(p.Price * od.Quantity) AS TotalSales
 FROM Orders o
@@ -13,29 +18,38 @@ INNER JOIN Products p
     ON od.ProductID = p.ProductID;
 
 
--- 2. Product-wise Sales
+-- =====================================================
+-- 2. PRODUCT-WISE SALES
+-- =====================================================
+
 SELECT
-    p.[Products Name],
+    p.ProductName,
     SUM(p.Price * od.Quantity) AS TotalSales
 FROM OrderDetails od
 INNER JOIN Products p
     ON od.ProductID = p.ProductID
-GROUP BY p.[Products Name]
+GROUP BY p.ProductName
 ORDER BY TotalSales DESC;
 
 
--- 3. Top Product
+-- =====================================================
+-- 3. TOP PRODUCT
+-- =====================================================
+
 SELECT TOP 1
-    p.[Products Name],
+    p.ProductName,
     SUM(p.Price * od.Quantity) AS TotalSales
 FROM OrderDetails od
 INNER JOIN Products p
     ON od.ProductID = p.ProductID
-GROUP BY p.[Products Name]
+GROUP BY p.ProductName
 ORDER BY TotalSales DESC;
 
 
--- 4. Customer-wise Total Sales
+-- =====================================================
+-- 4. CUSTOMER-WISE TOTAL SALES
+-- =====================================================
+
 SELECT
     c.CustomerName,
     SUM(p.Price * od.Quantity) AS TotalSpent
@@ -50,7 +64,10 @@ GROUP BY c.CustomerName
 ORDER BY TotalSpent DESC;
 
 
--- 5. Category-wise Sales
+-- =====================================================
+-- 5. CATEGORY-WISE SALES
+-- =====================================================
+
 SELECT
     p.Category,
     SUM(p.Price * od.Quantity) AS TotalSales
@@ -61,7 +78,10 @@ GROUP BY p.Category
 ORDER BY TotalSales DESC;
 
 
--- 6. Monthly Sales
+-- =====================================================
+-- 6. MONTHLY SALES
+-- =====================================================
+
 SELECT
     YEAR(o.OrderDate) AS SalesYear,
     MONTH(o.OrderDate) AS SalesMonth,
@@ -74,14 +94,19 @@ INNER JOIN Products p
 GROUP BY
     YEAR(o.OrderDate),
     MONTH(o.OrderDate)
-ORDER BY TotalSales DESC;
+ORDER BY
+    SalesYear,
+    SalesMonth;
 
 
--- 7. Top 3 Products using RANK()
+-- =====================================================
+-- 7. TOP 3 PRODUCTS USING RANK()
+-- =====================================================
+
 WITH ProductSales AS
 (
     SELECT
-        p.[Products Name],
+        p.ProductName,
         SUM(p.Price * od.Quantity) AS TotalSales,
         RANK() OVER
         (
@@ -90,10 +115,10 @@ WITH ProductSales AS
     FROM OrderDetails od
     INNER JOIN Products p
         ON od.ProductID = p.ProductID
-    GROUP BY p.[Products Name]
+    GROUP BY p.ProductName
 )
 SELECT
-    [Products Name],
+    ProductName,
     TotalSales,
     SalesRank
 FROM ProductSales
@@ -101,7 +126,10 @@ WHERE SalesRank <= 3
 ORDER BY SalesRank;
 
 
--- 8. Customer Order Count
+-- =====================================================
+-- 8. CUSTOMER ORDER COUNT
+-- =====================================================
+
 SELECT
     c.CustomerName,
     COUNT(o.OrderID) AS TotalOrders
@@ -112,13 +140,18 @@ GROUP BY c.CustomerName
 ORDER BY TotalOrders DESC;
 
 
--- 9. Customer Performance using CASE WHEN
+-- =====================================================
+-- 9. CUSTOMER PERFORMANCE USING CASE WHEN
+-- =====================================================
+
 SELECT
     c.CustomerName,
     SUM(p.Price * od.Quantity) AS TotalSpent,
     CASE
-        WHEN SUM(p.Price * od.Quantity) >= 100000 THEN 'High'
-        WHEN SUM(p.Price * od.Quantity) >= 50000 THEN 'Medium'
+        WHEN SUM(p.Price * od.Quantity) >= 100000
+            THEN 'High'
+        WHEN SUM(p.Price * od.Quantity) >= 50000
+            THEN 'Medium'
         ELSE 'Low'
     END AS CustomerCategory
 FROM Customers c
@@ -132,18 +165,24 @@ GROUP BY c.CustomerName
 ORDER BY TotalSpent DESC;
 
 
--- 10. Most Sold Product by Quantity
+-- =====================================================
+-- 10. MOST SOLD PRODUCT BY QUANTITY
+-- =====================================================
+
 SELECT
-    p.[Products Name],
+    p.ProductName,
     SUM(od.Quantity) AS TotalQuantity
 FROM OrderDetails od
 INNER JOIN Products p
     ON od.ProductID = p.ProductID
-GROUP BY p.[Products Name]
+GROUP BY p.ProductName
 ORDER BY TotalQuantity DESC;
 
 
--- 11. Average Order Value
+-- =====================================================
+-- 11. AVERAGE ORDER VALUE
+-- =====================================================
+
 SELECT
     AVG(OrderTotal) AS AverageOrderValue
 FROM
@@ -158,7 +197,10 @@ FROM
 ) AS OrderSales;
 
 
--- 12. City-wise Sales
+-- =====================================================
+-- 12. CITY-WISE SALES
+-- =====================================================
+
 SELECT
     c.City,
     SUM(p.Price * od.Quantity) AS TotalSales
@@ -173,7 +215,10 @@ GROUP BY c.City
 ORDER BY TotalSales DESC;
 
 
--- 13. Category-wise Quantity Sold
+-- =====================================================
+-- 13. CATEGORY-WISE QUANTITY SOLD
+-- =====================================================
+
 SELECT
     p.Category,
     SUM(od.Quantity) AS TotalQuantity
@@ -184,7 +229,10 @@ GROUP BY p.Category
 ORDER BY TotalQuantity DESC;
 
 
--- 14. Average Price by Category
+-- =====================================================
+-- 14. AVERAGE PRICE BY CATEGORY
+-- =====================================================
+
 SELECT
     Category,
     AVG(Price) AS AveragePrice
@@ -193,7 +241,10 @@ GROUP BY Category
 ORDER BY AveragePrice DESC;
 
 
--- 15. Customers Spending More Than 50000
+-- =====================================================
+-- 15. CUSTOMERS SPENDING MORE THAN 50000
+-- =====================================================
+
 SELECT
     c.CustomerName,
     SUM(p.Price * od.Quantity) AS TotalSpent
@@ -209,7 +260,10 @@ HAVING SUM(p.Price * od.Quantity) > 50000
 ORDER BY TotalSpent DESC;
 
 
--- 16. Customer Ranking
+-- =====================================================
+-- 16. CUSTOMER RANKING
+-- =====================================================
+
 SELECT
     c.CustomerName,
     SUM(p.Price * od.Quantity) AS TotalSpent,
@@ -228,7 +282,10 @@ GROUP BY c.CustomerName
 ORDER BY CustomerRank;
 
 
--- 17. COALESCE - NULL Safe Order Count
+-- =====================================================
+-- 17. COALESCE - NULL SAFE ORDER COUNT
+-- =====================================================
+
 SELECT
     c.CustomerName,
     COALESCE(COUNT(o.OrderID), 0) AS TotalOrders
@@ -236,3 +293,8 @@ FROM Customers c
 LEFT JOIN Orders o
     ON c.CustomerID = o.CustomerID
 GROUP BY c.CustomerName;
+
+
+-- =====================================================
+-- END OF SALES ANALYSIS
+-- =====================================================
